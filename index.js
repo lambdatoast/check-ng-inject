@@ -1,12 +1,14 @@
 var fs = require('fs');
 var check = require('./lib/check');
 
-var t0 = 'function Foo(a, b, c) {}\nFoo.$inject = ["a", "b"]';
+var t0 = '(function () {\n function Foo(a, b, c) {}\nFoo.$inject = ["a", "b"]\n }())';
 //var t0 = 'function Foo(a, b, c) {}\nif (1) { 1 + 1} else { Foo.$inject = ["a", "b"] }';
 
 var r = check(t0);
 
-//console.log(JSON.stringify(r));
+/*
+console.log(JSON.stringify(r));
+*/
 
 var files = process.argv.slice(2);
 files.forEach(function (val, index, array) {
@@ -18,5 +20,3 @@ files.forEach(function (val, index, array) {
 		}
 	});
 });
-/*
-*/
