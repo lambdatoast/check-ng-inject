@@ -1,3 +1,4 @@
+var q = require('q');
 var fs = require('fs');
 var check = require('./lib/check');
 
@@ -9,15 +10,13 @@ var r = check(t0);
 //console.log(JSON.stringify(r));
 
 var files = process.argv.slice(2);
-files.forEach(function (val, index, array) {
-  //console.log(index + ': ' + val);
-	fs.readFile(val, 'utf8', function(err, contents) {
-		var r = check(contents);
-		//console.log('r', r);
-		if (r.length > 0) {
-			console.log(JSON.stringify(r), '\n');
-		}
-	});
+
+void q.all(files.map(function (name) {
+	return q.nfcall(fs.readFile, name, 'utf8');
+})).then(function (xs) {
+	var results = xs.reduce(function (acc, js) {
+		var r = check(js);
+		return acc.concat(check(js));
+	}, []);
+	console.log(JSON.stringify(results));
 });
-/*
-*/
